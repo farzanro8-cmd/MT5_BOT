@@ -1,31 +1,33 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, render_template_string
 
 app = Flask(__name__)
 
+# لیست برای ذخیره لاگ‌ها (در حافظه)
 logs = []
 
-@app.route("/")
-def home():
-    text = "<br>".join(logs[::-1])
+# صفحه اصلی برای دیدن لاگ‌ها
+@app.route('/')
+def index():
+    return render_template_string('''
+        <html>
+            <head><meta http-equiv="refresh" content="2"></head>
+            <body>
+                <h1>MT5 Bot Logs</h1>
+                <pre>{{ logs|join('\n') }}</pre>
+            </body>
+        </html>
+    ''', logs=logs)
 
-    return f"""
-    <html>
-    <head>
-        <meta http-equiv="refresh" content="2">
-    </head>
-    <body style="background:black;color:lime;font-family:monospace">
-        <h2>MT5 Bot Live Monitor</h2>
-        {text}
-    </body>
-    </html>
-    """
-
-@app.route("/log", methods=["POST"])
-def add_log():
+# اندپوینت مورد نظر که 404 می‌دهد
+@app.route('/log', methods=['POST'])
+def log_endpoint():
     data = request.json
-    logs.append(data["msg"])
-
-    if len(logs) > 500:
+    msg = data.get('msg', '')
+    logs.append(msg)
+    # نگه داشتن فقط 50 لاگ آخر برای جلوگیری از پر شدن حافظه
+    if len(logs) > 50:
         logs.pop(0)
+    return 'OK', 200
 
-    return jsonify({"status": "ok"})
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
