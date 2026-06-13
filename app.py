@@ -11,11 +11,11 @@ MAX_LOGS = 100
 
 LOGIN_TEMPLATE = """
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farme Agent Monitor - Login</title>
+    <title>Farm Monitor - Login</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -26,20 +26,22 @@ LOGIN_TEMPLATE = """
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
         .login-box {
             background: #161b22;
             border: 1px solid #30363d;
             border-radius: 12px;
-            padding: 40px;
-            width: 340px;
+            padding: 40px 32px;
+            width: 100%;
+            max-width: 340px;
             text-align: center;
         }
         .login-box h2 {
-            color: #20c5b7;
-            font-size: 20px;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
+            color: #4da6ff;
+            font-size: 24px;
+            margin-bottom: 6px;
+            letter-spacing: 2px;
         }
         .login-box p {
             color: #8b949e;
@@ -60,14 +62,12 @@ LOGIN_TEMPLATE = """
             text-align: center;
             letter-spacing: 4px;
         }
-        input[type="password"]:focus {
-            border-color: #20c5b7;
-        }
+        input[type="password"]:focus { border-color: #4da6ff; }
         button {
             width: 100%;
             padding: 12px;
-            background: #20c5b7;
-            color: #0d1117;
+            background: #2ea043;
+            color: #fff;
             border: none;
             border-radius: 8px;
             font-size: 14px;
@@ -76,7 +76,7 @@ LOGIN_TEMPLATE = """
             font-family: 'Courier New', monospace;
             letter-spacing: 1px;
         }
-        button:hover { background: #1aa89b; }
+        button:hover { background: #3fb950; }
         .error {
             color: #f85149;
             font-size: 13px;
@@ -86,7 +86,7 @@ LOGIN_TEMPLATE = """
 </head>
 <body>
     <div class="login-box">
-        <h2>MT5 Bot Monitor</h2>
+        <h2>Farm</h2>
         <p>Enter password to continue</p>
         <form method="POST" action="/login">
             <input type="password" name="password" placeholder="••••••" autofocus>
@@ -102,11 +102,11 @@ LOGIN_TEMPLATE = """
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MT5 Bot Monitor</title>
+    <title>Farm Monitor</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -120,16 +120,18 @@ HTML_TEMPLATE = """
         header {
             background: #161b22;
             border-bottom: 1px solid #30363d;
-            padding: 16px 32px;
+            padding: 14px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         header h1 {
-            font-size: 20px;
-            color: #20c5b7;
-            letter-spacing: 1px;
+            font-size: 22px;
+            color: #4da6ff;
+            letter-spacing: 2px;
         }
 
         .status-badge {
@@ -158,33 +160,35 @@ HTML_TEMPLATE = """
 
         .stats {
             display: flex;
-            gap: 16px;
-            padding: 20px 32px;
+            gap: 12px;
+            padding: 16px 20px;
+            flex-wrap: wrap;
         }
 
         .stat-card {
             background: #161b22;
             border: 1px solid #30363d;
             border-radius: 8px;
-            padding: 14px 24px;
+            padding: 12px 16px;
             flex: 1;
+            min-width: 90px;
             text-align: center;
         }
 
         .stat-card .value {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: bold;
-            color: #20c5b7;
+            color: #8b949e;
         }
 
         .stat-card .label {
-            font-size: 12px;
+            font-size: 11px;
             color: #8b949e;
             margin-top: 4px;
         }
 
         .log-container {
-            margin: 0 32px 32px;
+            margin: 0 20px 32px;
             background: #161b22;
             border: 1px solid #30363d;
             border-radius: 8px;
@@ -193,26 +197,28 @@ HTML_TEMPLATE = """
 
         .log-header {
             background: #1c2128;
-            padding: 12px 20px;
+            padding: 10px 16px;
             border-bottom: 1px solid #30363d;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 13px;
             color: #8b949e;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .log-list {
-            max-height: 600px;
+            max-height: 65vh;
             overflow-y: auto;
         }
 
         .log-item {
-            padding: 10px 20px;
+            padding: 10px 16px;
             border-bottom: 1px solid #21262d;
             display: flex;
-            gap: 16px;
-            align-items: center;
+            gap: 12px;
+            align-items: flex-start;
             font-size: 13px;
             transition: background 0.2s;
         }
@@ -225,6 +231,7 @@ HTML_TEMPLATE = """
             height: 10px;
             border-radius: 50%;
             flex-shrink: 0;
+            margin-top: 3px;
         }
 
         .log-indicator.active {
@@ -240,45 +247,61 @@ HTML_TEMPLATE = """
         .log-time {
             color: #8b949e;
             white-space: nowrap;
-            min-width: 160px;
+            font-size: 12px;
+            min-width: 140px;
         }
 
-        .log-msg { color: #c9d1d9; word-break: break-all; }
+        .log-msg {
+            color: #c9d1d9;
+            word-break: break-all;
+            flex: 1;
+        }
 
         .log-index {
             color: #30363d;
-            min-width: 36px;
+            min-width: 30px;
             text-align: right;
+            font-size: 11px;
+            flex-shrink: 0;
         }
 
         .empty {
             text-align: center;
-            padding: 60px;
+            padding: 60px 20px;
             color: #8b949e;
             font-size: 14px;
         }
 
-        .log-list::-webkit-scrollbar { width: 6px; }
+        .log-list::-webkit-scrollbar { width: 5px; }
         .log-list::-webkit-scrollbar-track { background: #161b22; }
         .log-list::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
 
         .refresh-btn {
-            background: #21262d;
-            color: #c9d1d9;
-            border: 1px solid #30363d;
+            background: #2ea043;
+            color: #fff;
+            border: none;
             border-radius: 6px;
-            padding: 5px 12px;
+            padding: 5px 14px;
             cursor: pointer;
             font-size: 12px;
+            font-family: 'Courier New', monospace;
         }
-        .refresh-btn:hover { background: #30363d; }
+        .refresh-btn:hover { background: #3fb950; }
+
+        /* mobile tweaks */
+        @media (max-width: 480px) {
+            header h1 { font-size: 18px; }
+            .log-time { min-width: 100px; font-size: 11px; }
+            .log-item { font-size: 12px; gap: 8px; }
+            .stat-card .value { font-size: 18px; }
+        }
     </style>
     <meta http-equiv="refresh" content="10">
 </head>
 <body>
 
 <header>
-    <h1>MT5 Bot Monitor</h1>
+    <h1>Farm</h1>
     <div class="status-badge">
         <div class="dot"></div>
         LIVE
@@ -291,7 +314,7 @@ HTML_TEMPLATE = """
         <div class="label">Total Logs</div>
     </div>
     <div class="stat-card">
-        <div class="value">{{ last_time }}</div>
+        <div class="value" style="font-size:13px; padding-top:4px;">{{ last_time }}</div>
         <div class="label">Last Activity</div>
     </div>
     <div class="stat-card">
@@ -310,7 +333,7 @@ HTML_TEMPLATE = """
             {% for log in logs %}
             <div class="log-item">
                 <span class="log-index">#{{ loop.revindex }}</span>
-                <div class="log-indicator {% if loop.first %}active{% else %}inactive{% endif %}"></div>
+                <div class="log-indicator {{ log.status }}"></div>
                 <span class="log-time">{{ log.time }}</span>
                 <span class="log-msg">{{ log.msg }}</span>
             </div>
@@ -325,6 +348,24 @@ HTML_TEMPLATE = """
 </html>
 """
 
+def compute_statuses(log_list):
+    """
+    آخرین لاگ همیشه active است.
+    هر لاگ که فاصله زمانی بین آن و لاگ بعدی (جدیدتر) بیشتر از 0 ثانیه باشد
+    و لاگ جدیدتری بعد از آن آمده باشد، inactive میشود.
+    به عبارت ساده‌تر: فقط آخرین لاگ در هر "دسته زمانی متصل" active است —
+    یعنی فقط آخرین لاگ کل لیست active است.
+    """
+    result = []
+    for i, log in enumerate(log_list):
+        if i == len(log_list) - 1:
+            status = "active"
+        else:
+            status = "inactive"
+        result.append({**log, "status": status})
+    return result
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -334,14 +375,20 @@ def login():
         return render_template_string(LOGIN_TEMPLATE, error=True)
     return render_template_string(LOGIN_TEMPLATE, error=False)
 
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
 @app.route("/")
 def index():
     if not session.get("auth"):
         return redirect(url_for("login"))
     last_time = logs[-1]["time"] if logs else "—"
+    processed = compute_statuses(logs)
     return render_template_string(
         HTML_TEMPLATE,
-        logs=list(reversed(logs)),
+        logs=list(reversed(processed)),
         total=len(logs),
         last_time=last_time,
         max_logs=MAX_LOGS
